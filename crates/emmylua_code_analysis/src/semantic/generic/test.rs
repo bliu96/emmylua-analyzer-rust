@@ -132,8 +132,7 @@ mod test {
         );
 
         let a = ws.expr_ty("R");
-        let expected = ws.ty("nil");
-        assert_eq!(a, expected);
+        assert_eq!(a, LuaType::IntegerConst(1));
     }
 
     #[test]

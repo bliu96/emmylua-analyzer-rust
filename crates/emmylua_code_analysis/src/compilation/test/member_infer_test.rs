@@ -264,7 +264,7 @@ mod test {
         "#,
         );
 
-        assert_eq!(ws.expr_ty("A"), LuaType::Nil);
+        assert_eq!(ws.expr_ty("A"), LuaType::IntegerConst(1));
     }
 
     #[test]

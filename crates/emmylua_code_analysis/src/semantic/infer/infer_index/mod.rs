@@ -823,6 +823,9 @@ fn infer_member_by_index_table(
                     .get_member_index()
                     .get_members(&LuaMemberOwner::Element(table_range.clone()));
                 if let Some(mut members) = members {
+                    if members.len() > 500 {
+                        return Ok(LuaType::Any);
+                    }
                     members.sort_by(|a, b| a.get_key().cmp(b.get_key()));
                     let mut result_type = LuaType::Never;
                     let mut has_match = false;

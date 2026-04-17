@@ -2785,4 +2785,34 @@ _2 = a[1]
 
         assert_eq!(ws.expr_ty("after_assign"), ws.ty("Foo|Bar"));
     }
+
+    #[test]
+    fn test_ref_type_member_assignment_extends_class() {
+        let mut ws = VirtualWorkspace::new();
+
+        ws.def(
+            r#"
+            ---@class A
+            local A = {
+                a = 1
+            }
+
+            ---@class B
+            local B = {}
+
+            function B:Ctor()
+                ---@type A
+                local self = self
+                self.b = 2
+            end
+
+            ---@type A
+            local a
+            target = a.b
+            "#,
+        );
+
+        let target = ws.expr_ty("target");
+        assert_eq!(ws.humanize_type(target), "2");
+    }
 }

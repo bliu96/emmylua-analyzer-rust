@@ -252,15 +252,7 @@ fn set_index_expr_owner(analyzer: &mut LuaAnalyzer, var_expr: LuaVarExpr) -> Opt
                 LuaType::Instance(instance) => {
                     LuaMemberOwner::Element(instance.get_range().clone())
                 }
-                LuaType::Ref(ref_id) => {
-                    let member_owner = LuaMemberOwner::Type(ref_id);
-                    analyzer.db.get_member_index_mut().set_member_owner(
-                        member_owner,
-                        member_id.file_id,
-                        member_id,
-                    );
-                    return Some(());
-                }
+                LuaType::Ref(ref_id) => LuaMemberOwner::Type(ref_id),
                 // is ref need extend field?
                 _ => {
                     return None;

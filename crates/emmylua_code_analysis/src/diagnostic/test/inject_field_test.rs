@@ -19,7 +19,8 @@ mod test {
     #[test]
     fn test_inject_field() {
         let mut ws = VirtualWorkspace::new();
-        assert!(!ws.check_code_for(
+        // Ref type allows field injection, so no InjectField diagnostic
+        assert!(ws.check_code_for(
             DiagnosticCode::InjectField,
             r#"
             ---@class test1

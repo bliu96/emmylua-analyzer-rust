@@ -322,16 +322,21 @@ impl LuaTypeIndex {
     }
 
     pub fn add_super_type(&mut self, decl_id: LuaTypeDeclId, file_id: FileId, super_type: LuaType) {
-        self.supers
-            .entry(decl_id)
-            .or_default()
-            .push(InFiled::new(file_id, super_type));
+        let entry = self.supers.entry(decl_id).or_default();
+        let in_filed = InFiled::new(file_id, super_type);
+        if !entry.contains(&in_filed) {
+            entry.push(in_filed);
+        }
     }
 
     pub fn get_super_types(&self, decl_id: &LuaTypeDeclId) -> Option<Vec<LuaType>> {
-        self.supers
-            .get(decl_id)
-            .map(|supers| supers.iter().map(|s| s.value.clone()).collect())
+        self.supers.get(decl_id).map(|supers| {
+            let mut seen = hashbrown::HashSet::new();
+            supers
+                .iter()
+                .filter_map(|s| if seen.insert(s.value.clone()) { Some(s.value.clone()) } else { None })
+                .collect()
+        })
     }
 
     pub fn get_super_types_iter(
